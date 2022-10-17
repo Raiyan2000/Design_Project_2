@@ -34,3 +34,30 @@ void loop() {
 
 
 }
+
+bool micInput(int responseTime){
+   unsigned long start= millis();  // Start of sample window
+   unsigned int peakToPeak = 0;   // peak-to-peak level
+   unsigned int sound;
+   unsigned int signalMax = 0;
+   unsigned int signalMin = 1024;
+  
+   // collect data for responseTime miliseconds
+   while (millis() - start < responseTime)
+   {
+     sound = analogRead(microphone_cmd_input);
+     //This is the max of the 10-bit ADC so this loop will include all readings
+     if (sound < 1024){
+        if (sound > signalMax){
+          signalMax = sound;  // save just the max levels
+        }
+        else if (sound < signalMin){
+           signalMin = sound;  // save just the min levels
+        }
+     }
+   }
+   peakToPeak = signalMax - signalMin;  // max - min = peak-peak amplitude
+   double volts = (peakToPeak * 5) / 1024;  // convert to volts
+
+   return (volts>=2.0) ? true:false;
+}
