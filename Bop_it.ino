@@ -1,3 +1,12 @@
+#include <Wire.h>
+#include <Adafruit_GFX.h>
+#include <Adafruit_SSD1306.h>
+
+#define SCREEN_WIDTH 128 // OLED display width, in pixels
+#define SCREEN_HEIGHT 64 // OLED display height, in pixels
+
+Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, -1);
+
 int Button_start_pin = 8;
 int speaker_output = 6;
 int scl_lcd = A5, sda_lcd = A4;                                                 //LCD outputs
@@ -9,6 +18,8 @@ int command_num;
 bool game_is_on = true;
 int answer_time;
 bool correct_answer;
+int temp_dial_volt;
+int userPoints = 0;
 
 void setup() {
   // put your setup code here, to run once:
@@ -25,13 +36,22 @@ void setup() {
   pinMode(led_dial, OUTPUT);
   pinMode(led_microphone, OUTPUT);
 
+  Serial.begin(115200);
+  //Might have to change address
+  if(!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) { // Address 0x3D for 128x64
+    Serial.println(F("SSD1306 allocation failed"));
+    }
+  delay(2000);
+  display.clearDisplay();
+
+  display.setTextSize(1);
+  display.setTextColor(WHITE);
+  display.setCursor(5, 10);
 
 }
 
 bool buttonInput(int responseTime)
 {
-    //Speaker beep for button
-
     unsigned long start = millis(); 
     digitalWrite(led_button, HIGH);
 
@@ -148,8 +168,10 @@ void speakerOutput(int command)
 void loop() {
   // put your main code here, to run repeatedly:
   //Check if start button is pressed which would start the game
-
-
+  display.clearDisplay();
+  display.println("Start");
+  display.display();
+  
   if(digitalRead(Button_start_pin) == HIGH)
   {
     game_is_on = true;
@@ -159,14 +181,16 @@ void loop() {
     game_is_on = false;
   }
 
+
   while(game_is_on)
   {
-    //choose random command
-    //command_num = random(0,2);
+    display.clearDisplay();
+    display.println("Points: ");
+    display.display();
 
-    //Choose one command randomly
-    int temp_dial_volt;
-    command_num = 0;
+    //choose random command
+    command_num = random(0,2);
+    //command_num = 0;
     answer_time = 1000;
 
 
@@ -203,11 +227,17 @@ void loop() {
       game_is_on = false;
       //Set the timer to default value
       answer_time = 1000;
+
     }
     else
     {
       //Reduce answer time by 5ms
       answer_time -= 5;
+
+      //Update display
+      userPoints += 1;
+
+
     }
 
   }
