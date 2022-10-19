@@ -47,6 +47,8 @@ bool buttonCommand(int responseTime)
       }
     }
     digitalWrite(correct_led, LOW);
+    digitalWrite(wrong_led, HIGH);
+    delay(500);
     digitalWrite(wrong_led, LOW);
     digitalWrite(led_button, LOW);
     
