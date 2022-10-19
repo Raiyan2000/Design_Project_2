@@ -5,7 +5,10 @@ int button_cmd_input = 7, dial_cmd_input = A2, microphone_cmd_input = A3;      /
 int correct_led = 10, wrong_led = 9;                                           //LED pins for controlling right and wrong answer
 int led_button = 0, led_dial = 1, led_microphone = 2;                           //LED pins that light up with each commands
 
- int command_num = 0;
+int command_num;
+bool game_is_on = true;
+int answer_time;
+bool correct_answer;
 
 void setup() {
   // put your setup code here, to run once:
@@ -25,14 +28,29 @@ void setup() {
 
 }
 
+bool buttonCommand(int responseTime)
+{
+    //Speaker beep for button
 
+    unsigned long start = millis(); 
+    digitalWrite(led_button, HIGH);
 
-void loop() {
-  // put your main code here, to run repeatedly:
-
-
-
-
+    while (millis() - start < responseTime)
+    {
+      if (digitalRead(button_cmd_input) == HIGH)
+      {
+        digitalWrite(correct_led, HIGH);
+        delay(500);
+        digitalWrite(correct_led, LOW);
+        digitalWrite(led_button, LOW);
+        return true;
+      }
+    }
+    digitalWrite(correct_led, LOW);
+    digitalWrite(wrong_led, LOW);
+    digitalWrite(led_button, LOW);
+    
+    return false;
 }
 
 bool micInput(int responseTime){
@@ -61,3 +79,52 @@ bool micInput(int responseTime){
 
    return (volts>=2.0) ? true:false;
 }
+
+void loop() {
+  // put your main code here, to run repeatedly:
+  //Check if start button is pressed which would start the game
+
+
+  if(digitalRead(Button_start_pin) == HIGH)
+  {
+    game_is_on = true;
+  }
+  else
+  {
+    game_is_on = false;
+  }
+
+  while(game_is_on)
+  {
+    //choose random command
+    //command_num = random(0,2);
+
+    //Choose one command randomly
+    command_num = 0;
+    answer_time = 1000;
+    
+    //if command is pressing the button
+    if (command_num == 0)
+    {
+      //Speaker beeps for button
+      correct_answer = buttonCommand(answer_time);
+    } 
+    else if (command_num == 1)
+    {
+      //Speaker beeps for dial
+    }
+    else
+    {
+      //speaker beeps for microphone
+    }
+    
+
+    if (correct_answer == false)
+    {
+      //Call endgame function
+      game_is_on = false;
+    }
+
+  }
+}
+
