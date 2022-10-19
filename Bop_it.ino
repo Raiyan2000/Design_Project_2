@@ -28,7 +28,7 @@ void setup() {
 
 }
 
-bool buttonCommand(int responseTime)
+bool buttonInput(int responseTime)
 {
     //Speaker beep for button
 
@@ -82,10 +82,18 @@ bool micInput(int responseTime){
    return (volts>=2.0) ? true:false;
 }
 
+bool dialInput(int responseTime)
+{
+
+
+
+}
+
 void loop() {
   // put your main code here, to run repeatedly:
-  
   //Check if start button is pressed which would start the game
+
+
   if(digitalRead(Button_start_pin) == HIGH)
   {
     game_is_on = true;
@@ -100,16 +108,15 @@ void loop() {
     //choose random command
     //command_num = random(0,2);
 
-    //Choose button command for testing
+    //Choose one command randomly
     command_num = 0;
-    //give time for answering to be 1 sec for testing
     answer_time = 1000;
-    
+
     //if command is pressing the button
     if (command_num == 0)
     {
       //Speaker beeps for button
-      correct_answer = buttonCommand(answer_time);
+      correct_answer = buttonInput(answer_time);
     } 
     else if (command_num == 1)
     {
