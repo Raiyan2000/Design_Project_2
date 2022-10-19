@@ -69,7 +69,7 @@ bool micInput(int responseTime){
      //This is the max of the 10-bit ADC so this loop will include all readings
      if (sound < 1024){
         if (sound > signalMax){
-          signalMax = sound;  // save just the max levels
+           signalMax = sound;  // save just the max levels
         }
         else if (sound < signalMin){
            signalMin = sound;  // save just the min levels
@@ -122,9 +122,6 @@ void speakerOutput(int command)
     delay(200);
     digitalWrite(speaker_output, LOW);
   }
-
-
-
 }
 
 void loop() {
@@ -155,18 +152,22 @@ void loop() {
     {
       //Speaker beeps for button
       speakerOutput(command_num);
+
       correct_answer = buttonInput(answer_time);
     } 
     else if (command_num == 1)
     {
       //Speaker beeps for dial
       speakerOutput(command_num);
+
+
     }
     else
     {
       //speaker beeps for microphone
       speakerOutput(command_num);
 
+      correct_answer = micInput(answer_time);
     }
   
 
@@ -174,6 +175,13 @@ void loop() {
     {
       //Call endgame function
       game_is_on = false;
+      //Set the timer to default value
+      answer_time = 1000;
+    }
+    else
+    {
+      //Reduce answer time by 5ms
+      answer_time -= 5;
     }
 
   }
