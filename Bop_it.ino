@@ -82,9 +82,8 @@ bool micInput(int responseTime){
 
 void loop() {
   // put your main code here, to run repeatedly:
+  
   //Check if start button is pressed which would start the game
-
-
   if(digitalRead(Button_start_pin) == HIGH)
   {
     game_is_on = true;
@@ -99,8 +98,9 @@ void loop() {
     //choose random command
     //command_num = random(0,2);
 
-    //Choose one command randomly
+    //Choose button command for testing
     command_num = 0;
+    //give time for answering to be 1 sec for testing
     answer_time = 1000;
     
     //if command is pressing the button
