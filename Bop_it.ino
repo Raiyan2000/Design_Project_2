@@ -82,10 +82,31 @@ bool micInput(int responseTime){
    return (volts>=2.0) ? true:false;
 }
 
-bool dialInput(int responseTime)
+bool dialInput(int responseTime, int temp_volt)
 {
+  unsigned long start = millis();
+  int current_volt;
+  digitalWrite(led_dial, HIGH);
 
+  while (millis() - start < responseTime)
+  {
+    current_volt = analogRead(dial_cmd_input);
 
+    if (temp_volt - current_volt != 0)
+    {
+      digitalWrite(correct_led, HIGH);
+      delay(500);
+      digitalWrite(correct_led, LOW);
+      digitalWrite(led_dial, LOW);
+      return true;
+    }
+  }
+  digitalWrite(correct_led, LOW);
+  digitalWrite(wrong_led, HIGH);
+  delay(500);
+  digitalWrite(wrong_led, LOW);
+  digitalWrite(led_dial, LOW);
+  
   return false;
 }
 
@@ -144,8 +165,10 @@ void loop() {
     //command_num = random(0,2);
 
     //Choose one command randomly
+    int temp_dial_volt;
     command_num = 0;
     answer_time = 1000;
+
 
     //if command is pressing the button
     if (command_num == 0)
@@ -157,10 +180,13 @@ void loop() {
     } 
     else if (command_num == 1)
     {
+      //Read current state of potentiometer
+      temp_dial_volt = analogRead(dial_cmd_input);
+
       //Speaker beeps for dial
       speakerOutput(command_num);
 
-
+      correct_answer = dialInput(answer_time, temp_dial_volt);
     }
     else
     {
