@@ -86,6 +86,44 @@ bool dialInput(int responseTime)
 {
 
 
+  return false;
+}
+
+void speakerOutput(int command)
+{
+  if (command == 0)
+  {
+     digitalWrite(speaker_output, HIGH);
+     delay(200);
+     digitalWrite(speaker_output, LOW);
+  }
+  else if (command == 1)
+  {
+    digitalWrite(speaker_output, HIGH);
+    delay(200);
+    digitalWrite(speaker_output, LOW);
+    delay(200);
+    digitalWrite(speaker_output, HIGH);
+    delay(200);
+    digitalWrite(speaker_output, LOW);
+
+  }
+  else
+  {
+    digitalWrite(speaker_output, HIGH);
+    delay(200);
+    digitalWrite(speaker_output, LOW);
+    delay(200);
+    digitalWrite(speaker_output, HIGH);
+    delay(200);
+    digitalWrite(speaker_output, LOW);
+    delay(200);
+    digitalWrite(speaker_output, HIGH);
+    delay(200);
+    digitalWrite(speaker_output, LOW);
+  }
+
+
 
 }
 
@@ -116,17 +154,21 @@ void loop() {
     if (command_num == 0)
     {
       //Speaker beeps for button
+      speakerOutput(command_num);
       correct_answer = buttonInput(answer_time);
     } 
     else if (command_num == 1)
     {
       //Speaker beeps for dial
+      speakerOutput(command_num);
     }
     else
     {
       //speaker beeps for microphone
+      speakerOutput(command_num);
+
     }
-    
+  
 
     if (correct_answer == false)
     {
