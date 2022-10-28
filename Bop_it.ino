@@ -105,21 +105,53 @@ bool micInput(int responseTime){
 bool dialInput(int responseTime, int temp_volt)
 {
   unsigned long start = millis();
+  bool state = false;
   int current_volt;
+  temp_dial_volt = analogRead(dial_cmd_input);
+
+  if(temp_dial_volt < 300)
+  {
+    //Low
+    state = false;
+  }
+  else if(temp_dial_volt > 800)
+  {
+    //High
+    state = true;
+  }
+
   digitalWrite(led_dial, HIGH);
+  
 
   while (millis() - start < responseTime)
   {
     current_volt = analogRead(dial_cmd_input);
 
-    if ((temp_volt - current_volt < 0.5 && temp_volt - current_volt > 0) || (temp_volt - current_volt > -0.5 && temp_volt - current_volt < 0) )
+    //high
+    if (state == true)
     {
-      digitalWrite(led_dial, LOW);
-      digitalWrite(correct_led, HIGH);
-      delay(2000);
-      digitalWrite(correct_led, LOW);
-      return true;
+      if (current_volt < 400)
+      {
+        digitalWrite(led_dial, LOW);
+        digitalWrite(correct_led, HIGH);
+        delay(2000);
+        digitalWrite(correct_led, LOW);
+        return true;
+      }
     }
+    //low
+    else
+    {
+      if (current_volt > 700)
+      {
+        digitalWrite(led_dial, LOW);
+        digitalWrite(correct_led, HIGH);
+        delay(2000);
+        digitalWrite(correct_led, LOW);
+        return true;
+      }
+    }
+    
   }
   //digitalWrite(correct_led, LOW);
   digitalWrite(led_dial, LOW);
