@@ -66,7 +66,7 @@ bool buttonInput(int responseTime)
         return true;
       }
     }
-    digitalWrite(correct_led, LOW);
+    //digitalWrite(correct_led, LOW);
     digitalWrite(wrong_led, HIGH);
     delay(500);
     digitalWrite(wrong_led, LOW);
@@ -112,20 +112,21 @@ bool dialInput(int responseTime, int temp_volt)
   {
     current_volt = analogRead(dial_cmd_input);
 
-    if (temp_volt - current_volt != 0)
+    if ((temp_volt - current_volt < 0.5 && temp_volt - current_volt > 0) || (temp_volt - current_volt > -0.5 && temp_volt - current_volt < 0) )
     {
-      digitalWrite(correct_led, HIGH);
-      delay(500);
-      digitalWrite(correct_led, LOW);
       digitalWrite(led_dial, LOW);
+      digitalWrite(correct_led, HIGH);
+      delay(2000);
+      digitalWrite(correct_led, LOW);
       return true;
     }
   }
-  digitalWrite(correct_led, LOW);
-  digitalWrite(wrong_led, HIGH);
-  delay(500);
-  digitalWrite(wrong_led, LOW);
+  //digitalWrite(correct_led, LOW);
   digitalWrite(led_dial, LOW);
+  digitalWrite(wrong_led, HIGH);
+  delay(2000);
+  digitalWrite(wrong_led, LOW);
+  
   
   return false;
 }
@@ -187,6 +188,8 @@ void loop() {
     display.clearDisplay();
     display.println("Points: ");
     display.display();
+
+    digitalWrite(correct_led, LOW);
 
     //choose random command
     command_num = random(0,2);
