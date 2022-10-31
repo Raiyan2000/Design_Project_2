@@ -81,6 +81,8 @@ bool micInput(int responseTime){
    unsigned int sound;
    unsigned int signalMax = 0;
    unsigned int signalMin = 1024;
+
+   //digitalWrite(microphone_cmd_input, HIGH);
   
    // collect data for responseTime miliseconds
    while (millis() - start < responseTime)
@@ -105,7 +107,7 @@ bool micInput(int responseTime){
 bool dialInput(int responseTime, int temp_volt)
 {
   unsigned long start = millis();
-  bool state = false;
+  bool state;
   int current_volt;
   temp_dial_volt = analogRead(dial_cmd_input);
 
@@ -114,7 +116,7 @@ bool dialInput(int responseTime, int temp_volt)
     //Low
     state = false;
   }
-  else if(temp_dial_volt > 800)
+  else if(temp_dial_volt > 1000)
   {
     //High
     state = true;
@@ -258,22 +260,36 @@ void loop() {
 
     if (correct_answer == false)
     {
+      display.clearDisplay(); 
+      display.println("Points: ");
+      display.print(userPoints, DEC);
+      delay(1000);
+      //sprintf(buf, "%d", points);
+      //u8g.drawStr(18, 3, buf);
       //Call endgame function
       game_is_on = false;
       //Set the timer to default value
-      answer_time = 1000;
+      answer_time = 2000;
+
+      userPoints = 0;
 
     }
     else
     {
+     
       //Reduce answer time by 5ms
       answer_time -= 5;
 
       //Update display
       userPoints += 1;
 
-
+      display.clearDisplay(); 
+      display.println("Points: ");
+      display.print(userPoints, DEC);
+      delay(1000);
     }
+
+    
 
   }
 }
