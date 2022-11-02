@@ -20,6 +20,7 @@ int answer_time;
 bool correct_answer;
 int userPoints=0;
 
+
 void setup() {
   // put your setup code here, to run once:
   pinMode(button_cmd_input, INPUT);
@@ -92,12 +93,23 @@ bool micInput(int responseTime){
    while (millis() - start < responseTime)
    {
      sound = analogRead(microphone_cmd_input);
+
      if(sound>=800){
         digitalWrite(correct_led, HIGH);
         delay(500);
         digitalWrite(correct_led, LOW);
         digitalWrite(led_microphone, LOW);
         return true;
+
+     //This is the max of the 10-bit ADC so this loop will include all readings
+     if (sound < 1024){
+        if (sound > signalMax){
+           signalMax = sound;  // save just the max levels
+        }
+        else if (sound < signalMin){
+           signalMin = sound;  // save just the min levels
+        }
+
      }
    }
     digitalWrite(correct_led, LOW);
@@ -306,3 +318,135 @@ void loop() {
 
   }
 }
+
+bool dialInput(int responseTime, int temp_volt)
+{
+  unsigned long start = millis();
+  int current_volt;
+  digitalWrite(led_dial, HIGH);
+
+  while (millis() - start < responseTime)
+  {
+    current_volt = analogRead(dial_cmd_input);
+
+    if (temp_volt - current_volt != 0)
+    {
+      digitalWrite(correct_led, HIGH);
+      delay(500);
+      digitalWrite(correct_led, LOW);
+      digitalWrite(led_dial, LOW);
+      return true;
+    }
+  }
+  digitalWrite(correct_led, LOW);
+  digitalWrite(wrong_led, HIGH);
+  delay(500);
+  digitalWrite(wrong_led, LOW);
+  digitalWrite(led_dial, LOW);
+  
+  return false;
+}
+
+void speakerOutput(int command)
+{
+  if (command == 0)
+  {
+     digitalWrite(speaker_output, HIGH);
+     delay(200);
+     digitalWrite(speaker_output, LOW);
+  }
+  else if (command == 1)
+  {
+    digitalWrite(speaker_output, HIGH);
+    delay(200);
+    digitalWrite(speaker_output, LOW);
+    delay(200);
+    digitalWrite(speaker_output, HIGH);
+    delay(200);
+    digitalWrite(speaker_output, LOW);
+
+  }
+  else
+  {
+    digitalWrite(speaker_output, HIGH);
+    delay(200);
+    digitalWrite(speaker_output, LOW);
+    delay(200);
+    digitalWrite(speaker_output, HIGH);
+    delay(200);
+    digitalWrite(speaker_output, LOW);
+    delay(200);
+    digitalWrite(speaker_output, HIGH);
+    delay(200);
+    digitalWrite(speaker_output, LOW);
+  }
+}
+
+void loop() {
+  // put your main code here, to run repeatedly:
+  //Check if start button is pressed which would start the game
+
+
+  if(digitalRead(Button_start_pin) == HIGH)
+  {
+    game_is_on = true;
+  }
+  else
+  {
+    game_is_on = false;
+  }
+
+  while(game_is_on)
+  {
+    //choose random command
+    //command_num = random(0,2);
+
+    //Choose one command randomly
+    int temp_dial_volt;
+    command_num = 0;
+    answer_time = 1000;
+
+
+    //if command is pressing the button
+    if (command_num == 0)
+    {
+      //Speaker beeps for button
+      speakerOutput(command_num);
+
+      correct_answer = buttonInput(answer_time);
+    } 
+    else if (command_num == 1)
+    {
+      //Read current state of potentiometer
+      temp_dial_volt = analogRead(dial_cmd_input);
+
+      //Speaker beeps for dial
+      speakerOutput(command_num);
+
+      correct_answer = dialInput(answer_time, temp_dial_volt);
+    }
+    else
+    {
+      //speaker beeps for microphone
+      speakerOutput(command_num);
+
+      correct_answer = micInput(answer_time);
+    }
+  
+
+    if (correct_answer == false)
+    {
+      //Call endgame function
+      game_is_on = false;
+      //Set the timer to default value
+      answer_time = 1000;
+    }
+    else
+    {
+      //Reduce answer time by 5ms
+      answer_time -= 5;
+    }
+
+  }
+}
+
