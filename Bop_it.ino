@@ -46,7 +46,7 @@ void setup() {
 
   display.setTextSize(1);
   display.setTextColor(WHITE);
-  display.setCursor(5, 10);
+  display.setCursor(0, 10);
 
 }
 
