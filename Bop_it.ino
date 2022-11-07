@@ -36,18 +36,7 @@ void setup() {
   pinMode(led_dial, OUTPUT);
   pinMode(led_microphone, OUTPUT);
 
-  Serial.begin(115200);
-  //Might have to change address
-  if(!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) { // Address 0x3D for 128x64
-    Serial.println(F("SSD1306 allocation failed"));
-    }
-  delay(2000);
-  display.clearDisplay();
-
-  display.setTextSize(1);
-  display.setTextColor(WHITE);
-  display.setCursor(0, 10);
-
+  
 }
 
 bool buttonInput(int responseTime)
@@ -203,7 +192,17 @@ void speakerOutput(int command)
 void loop() {
   // put your main code here, to run repeatedly:
   //Check if start button is pressed which would start the game
+  Serial.begin(115200);
+  //Might have to change address
+  if(!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) { // Address 0x3D for 128x64
+    Serial.println(F("SSD1306 allocation failed"));
+    }
+  delay(2000);
   display.clearDisplay();
+
+  display.setTextSize(1);
+  display.setTextColor(WHITE);
+  display.setCursor(2, 10);
   display.println("Start");
   display.display();
   
@@ -285,7 +284,7 @@ void loop() {
 
       display.clearDisplay(); 
       display.println("Points: ");
-      display.print(userPoints, DEC);
+      display.print(user_Points, DEC);
       delay(1000);
     }
 
