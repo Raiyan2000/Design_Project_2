@@ -100,6 +100,7 @@ bool micInput(int responseTime){
         digitalWrite(correct_led, LOW);
         digitalWrite(led_microphone, LOW);
         return true;
+     }
 
      //This is the max of the 10-bit ADC so this loop will include all readings
      if (sound < 1024){
