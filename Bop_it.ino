@@ -145,7 +145,11 @@ bool buttonInput(int responseTime)
       {
         if(incorrect_input[i] == true)
         {
-          break;
+          digitalWrite(led_dial, LOW);
+          digitalWrite(wrong_led, HIGH);
+          delay(2000);
+          digitalWrite(wrong_led, LOW);
+          return false;
         }
       }
     }
@@ -187,7 +191,11 @@ bool micInput(int responseTime){
      {
        if(incorrect_input[i] == true)
        {
-         break;
+          digitalWrite(led_dial, LOW);
+          digitalWrite(wrong_led, HIGH);
+          delay(2000);
+          digitalWrite(wrong_led, LOW);
+          return false;
        }
      }
    }
@@ -256,7 +264,11 @@ bool dialInput(int responseTime, int temp_volt)
     {
       if(incorrect_input[i] == true)
       {
-        break;
+        digitalWrite(led_dial, LOW);
+        digitalWrite(wrong_led, HIGH);
+        delay(2000);
+        digitalWrite(wrong_led, LOW);
+        return false;
       }
     } 
   }
