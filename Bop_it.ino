@@ -145,7 +145,7 @@ bool buttonInput(int responseTime)
       {
         if(incorrect_input[i] == true)
         {
-          digitalWrite(led_dial, LOW);
+          digitalWrite(led_button, LOW);
           digitalWrite(wrong_led, HIGH);
           delay(2000);
           digitalWrite(wrong_led, LOW);
@@ -191,7 +191,7 @@ bool micInput(int responseTime){
      {
        if(incorrect_input[i] == true)
        {
-          digitalWrite(led_dial, LOW);
+          digitalWrite(led_microphone, LOW);
           digitalWrite(wrong_led, HIGH);
           delay(2000);
           digitalWrite(wrong_led, LOW);
